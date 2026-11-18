@@ -1,0 +1,385 @@
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px); /* 從下方稍微浮上來 */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+body {
+  animation: pageFadeIn 0.5s ease-out;
+  background-image: url(../IMG/p2_bg.png);
+
+  width: 100%;
+  overflow-x: hidden; /* 隱藏並鎖定水平滾動 */
+}
+.text img {
+  width: 429px;
+  height: 28px;
+  position: absolute;
+  left: calc(50vw - 214px);
+  top: 50px;
+}
+/* 史書紀錄 */ /* 史書紀錄 */ /* 史書紀錄 */ /* 史書紀錄 */ /* 史書紀錄 */ /* 史書紀錄 */ /* 史書紀錄 */
+/* 史書紀錄 */ /* 史書紀錄 */ /* 史書紀錄 */ /* 史書紀錄 */ /* 史書紀錄 */ /* 史書紀錄 */ /* 史書紀錄 */
+/* 史書紀錄 */ /* 史書紀錄 */ /* 史書紀錄 */ /* 史書紀錄 */ /* 史書紀錄 */ /* 史書紀錄 */ /* 史書紀錄 */
+.book {
+  position: absolute;
+  left: calc(0vw - 70px);
+  top: calc(50vh + 50px);
+  transform: scale(0.7); /* 預設尺寸為 60% */
+  transform-origin: left center; /* 建議設定從左側縮放，避免縮放後位置跑掉 */
+  transition: transform 0.3s ease; /* 增加平滑過渡動畫 */
+  cursor: pointer;
+  z-index: 10;
+  animation: book 1.5s ease-in-out infinite;
+}
+@keyframes book {
+  0% {
+    transform: scale(70%);
+  }
+  50% {
+    transform: scale(65%);
+  }
+  100% {
+    transform: scale(70%);
+  }
+}
+/* 滑鼠移入 .book 時恢復為 100% */
+.book:hover {
+  transform: scale(1);
+}
+
+/* 全螢幕遮罩設定 (#11094d 透明度 70% = rgba(17, 9, 77, 0.7)) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(255, 210, 117, 0.8);
+
+  /* 讓內容水平垂直置中 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* 預設隱藏 */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none; /* 關鍵：防止遮罩蓋住 .book 導致 hover 中斷閃爍 */
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+  z-index: 999;
+}
+
+/* 彈跳出的內部 div */
+.modal-content {
+  transform: scale(0.8);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 帶有微彈跳效果 */
+}
+
+.modal-content img {
+  max-width: 80vw;
+  max-height: 80vh;
+  display: block;
+}
+
+/* 當滑鼠 hover .book 時，觸發後方兄弟元素 .modal-overlay 顯示 */
+.book:hover ~ .modal-overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 彈跳動畫效果 */
+.book:hover ~ .modal-overlay .modal-content {
+  transform: scale(1);
+}
+
+/*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/
+/*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/
+/*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/ /*進度條*/
+.flowcont {
+  position: relative;
+  top: calc(100vh - 100px);
+  left: calc(50vw - 250px);
+}
+/* 1. 設定容器：隱藏超出範圍的部分，並給予背景色 */
+.flow {
+  width: 100%;
+  max-width: 500px; /* 依照你的版面需求調整寬度 */
+  height: 20px;
+  position: absolute;
+  overflow: hidden; /* 非常重要：把超出容器的圖片切掉 */
+}
+
+/* 2. 設定圖片：讓圖片寬度大於容器，並套用無限循環動畫 */
+.flowimg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 200%; /* 讓圖片變寬，確保滾動時不會露出空白 */
+  object-fit: cover;
+  /* 套用動畫：名稱、持續時間、線性播放、無限循環 */
+  animation: waveFlow 10s linear infinite;
+}
+
+/* 3. 定義動畫：讓圖片向左移動一段距離後瞬間重置，形成無限循環 */
+@keyframes waveFlow {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0); /* 剛好移動圖片總寬度的一半 */
+  }
+}
+/* 4. 調整小船位置，讓它完美壓在波浪起點上 */
+.flowboat {
+  position: absolute;
+  top: -15px; /* 往上移動，負值可依你的畫面微調，讓船底剛好貼住波浪 */
+  left: 80px; /* 對齊波浪的起點 */
+  z-index: 2; /* 確保小船圖層在波浪上方 */
+  animation: nextboat 0.5s ease-in-out infinite alternate;
+}
+.flowboatimg {
+  width: 40px;
+  height: 40px;
+}
+.flowtext {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 5px);
+  width: 80px;
+  height: 15px;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateX(-50%);
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+  pointer-events: none;
+}
+
+.flowboatimg:hover + .flowtext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/*選項設定*/ /*選項設定*/ /*選項設定*/ /*選項設定*/ /*選項設定*/ /*選項設定*/ /*選項設定*/ /*選項設定*/
+/*選項設定*/ /*選項設定*/ /*選項設定*/ /*選項設定*/ /*選項設定*/ /*選項設定*/ /*選項設定*/ /*選項設定*/
+/*選項設定*/ /*選項設定*/ /*選項設定*/ /*選項設定*/ /*選項設定*/ /*選項設定*/ /*選項設定*/ /*選項設定*/
+.opt {
+  display: flex;
+  flex-direction: row;
+  justify-content: center; /* 垂直置中 */
+  gap: 60px;
+  position: absolute;
+  left: calc(50vw - 510px);
+  top: calc(50vh - 200px);
+}
+.opta,
+.optb,
+.optc {
+  position: relative; /* 作為內部絕對定位海浪的基準 */
+  overflow: hidden; /* 關鍵：裁切超出膠囊圓角的海浪 */
+  width: 300px;
+  height: 464px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  border: #ffffff solid 1px;
+  border-radius: 150px;
+  background-color: #11094d;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition:
+    border-color 0.4s ease,
+    background-color 0.2s ease;
+}
+
+/* Hover 時外框變藍色 */
+.opta:hover,
+.optb:hover,
+.optc:hover {
+  border-color: #365cf5;
+}
+
+/* 單選按鈕本身隱藏，但仍可用鍵盤切換 */
+.opta input,
+.optb input,
+.optc input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+/* 整張卡片都是可點選的標籤 */
+.opta label,
+.optb label,
+.optc label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0px;
+  border-radius: inherit;
+  cursor: pointer;
+}
+
+.opta:has(input:checked),
+.optb:has(input:checked),
+.optc:has(input:checked) {
+  border: #4773f5 solid 1px;
+  background-color: #4773f5;
+}
+
+.opta:has(input:focus-visible),
+.optb:has(input:focus-visible),
+.optc:has(input:focus-visible) {
+  outline: 3px solid #ffffff;
+  outline-offset: 4px;
+}
+
+.gifa,
+.gifb,
+.gifc {
+  width: 220px;
+  height: 262px;
+  position: relative;
+  z-index: 2; /* 確保在海浪上方 */
+}
+
+.texta {
+  width: 117px;
+  height: 90px;
+  object-fit: contain;
+  position: relative;
+  z-index: 2; /* 確保在海浪上方 */
+}
+
+.textb {
+  width: 178px;
+  height: 90px;
+  object-fit: contain;
+  position: relative;
+  z-index: 2; /* 確保在海浪上方 */
+}
+
+.textc {
+  width: 130px;
+  height: 100px;
+  object-fit: contain;
+  position: relative;
+  z-index: 2; /* 確保在海浪上方 */
+}
+
+/* 外層：負責 Hover 時從底部向上升起 */
+.wave {
+  position: absolute;
+  bottom: -15px; /* 預留一點底部空間，避免上下浮動時底部露餡 */
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  pointer-events: none;
+  transform: translateY(100%); /* 平時完全藏在按鈕下方 */
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.opta:hover .wave,
+.optb:hover .wave,
+.optc:hover .wave {
+  transform: translateY(0); /* Hover 時升起至定位 */
+}
+
+/* 內層：負責不斷上下微幅移動 */
+.wave-inner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  animation: waveBobbing 2.2s ease-in-out infinite;
+}
+
+.wave-inner img {
+  width: 100%;
+  display: block;
+  /* 若 4 張海浪間距太開，可用負 margin 讓它們重疊（依你的圖片高度微調） */
+  margin-top: -25px;
+}
+
+.wave-inner img:first-child {
+  margin-top: 0;
+}
+
+/* 上下微幅浮動動畫 */
+@keyframes waveBobbing {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px); /* 往上微幅浮動 10px，可依需求增減 */
+  }
+}
+
+/*繼續航行按鈕*/ /*繼續航行按鈕*/ /*繼續航行按鈕*/ /*繼續航行按鈕*/ /*繼續航行按鈕*/ /*繼續航行按鈕*/
+/*繼續航行按鈕*/ /*繼續航行按鈕*/ /*繼續航行按鈕*/ /*繼續航行按鈕*/ /*繼續航行按鈕*/ /*繼續航行按鈕*/
+/*繼續航行按鈕*/ /*繼續航行按鈕*/ /*繼續航行按鈕*/ /*繼續航行按鈕*/ /*繼續航行按鈕*/ /*繼續航行按鈕*/
+.nextbtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.next {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+}
+
+.next.is-visible {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.nextboat {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.nextbtn:hover .nextboat {
+  visibility: visible;
+  opacity: 1;
+  animation: nextboat 0.5s ease-in-out infinite alternate;
+}
+@keyframes nextboat {
+  0% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(-15px);
+  }
+}
